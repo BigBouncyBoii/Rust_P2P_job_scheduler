@@ -163,7 +163,6 @@ rand ="0.8"
     - **Leaf nodes** = servers
     - **Spine nodes** = switches connecting leaf nodes
     - Edges can have **weights** for latency/bandwidth to simulate realistic AI data center conditions.
-
 ---
 
 ### **Day 3–4: Graph Algorithms & Scheduling Logic**

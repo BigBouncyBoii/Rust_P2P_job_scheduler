@@ -9,7 +9,7 @@ pub enum Status {
 }
 
 pub struct Job{
-  id: u32,
+  id: String,
   message: String,
   gpu_required: u32,
   memory_required: u32, 
@@ -18,7 +18,7 @@ pub struct Job{
 }
 
 impl Job {
-  pub fn new(id: u32, message: String, gpu_required: u32, memory_required:u32, runtime: u32, status: Status) -> Self {
+  pub fn new(id: String, message: String, gpu_required: u32, memory_required:u32, runtime: u32, status: Status) -> Self {
     Self {
       id,
       message,
@@ -29,8 +29,8 @@ impl Job {
     }
   }
 
-  pub fn id(&self) -> u32 {
-    self.id
+  pub fn id(&self) -> &str {
+    &self.id
   }
 
   pub fn message(&self) -> &str {
