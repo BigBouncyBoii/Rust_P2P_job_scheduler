@@ -8,6 +8,7 @@ pub enum Status {
 
 }
 
+#[derive(Debug, Clone)]
 pub struct Job{
   id: String,
   message: String,

@@ -1,7 +1,8 @@
 use crate::scheduler::job::Job;
 
+#[derive(Debug, Clone)]
 pub struct Node {
-  id: u32,
+  id: String,
   available_gpus: u32,
   available_memory: u32,
   jobs: Vec<Job>,
@@ -9,7 +10,7 @@ pub struct Node {
 
 impl Node {
 
-  pub fn new(id: u32, available_gpus: u32, available_memory: u32) -> Self {
+  pub fn new(id: String, available_gpus: u32, available_memory: u32) -> Self {
     Self {
       id,
       available_gpus,
@@ -18,8 +19,8 @@ impl Node {
     }
   }
 
-  pub fn id(&self) -> u32{
-    self.id
+  pub fn id(&self) -> &str{
+    &self.id
   }
 
   pub fn available_gpus(&self) -> u32 {

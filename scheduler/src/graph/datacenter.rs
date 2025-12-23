@@ -2,6 +2,8 @@ use petgraph::graph::{UnGraph, NodeIndex};
 use uuid::Uuid;
 use rand::Rng;
 
+use crate::node::node::Node;
+
 #[derive(Debug, Clone)]
 pub enum NodeType {
   Server,
@@ -11,7 +13,8 @@ pub enum NodeType {
 
 #[derive(Debug, Clone)]
 pub struct GraphNode {
-  id: String,        
+  id: String,
+  node: Option<Node>,
   kind: NodeType,   
 }
 
@@ -23,6 +26,16 @@ pub struct LinkWeight {
 impl LinkWeight {
   pub fn get_weight(&self) -> u32 {
     return  self.latency_ms + (1000 / self.bandwidth_gbps);
+  }
+}
+
+impl GraphNode {
+  pub fn kind(&self) -> &NodeType{
+    return &self.kind
+  }
+
+  pub fn node(&mut self) -> &mut Option<Node> {
+    return &mut self.node
   }
 }
 
@@ -51,6 +64,7 @@ fn build_leaf_server(num_leaf: u32,
   for i in 0..num_leaf{
     let leaf = GraphNode{
       id: Uuid::new_v4().to_string(),
+      node: None,
       kind: NodeType::LeafSwitch,
     };
     let leaf_node = g.add_node(leaf);
@@ -58,6 +72,11 @@ fn build_leaf_server(num_leaf: u32,
     for j in 0..servers_per_leaf{
       let server = GraphNode{
         id: Uuid::new_v4().to_string(),
+        node: Some(Node::new(
+          Uuid::new_v4().to_string(),
+          4,
+          16
+        )),
         kind: NodeType::Server,
       };
       let server_node = g.add_node(server);
@@ -79,6 +98,7 @@ fn build_leaf_spine(num_spine: u32,
   for i in 0..num_spine{
     let spine = GraphNode{
       id: Uuid::new_v4().to_string(),
+      node: None,
       kind: NodeType::SpineSwitch,
     };
     let spine_node = g.add_node(spine);
