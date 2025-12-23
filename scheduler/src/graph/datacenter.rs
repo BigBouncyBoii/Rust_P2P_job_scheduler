@@ -1,7 +1,6 @@
-use petgraph::graph::{Graph, UnGraph};
+use petgraph::graph::{UnGraph, NodeIndex};
 use uuid::Uuid;
 use rand::Rng;
-use petgraph::graph::NodeIndex;
 
 #[derive(Debug, Clone)]
 pub enum NodeType {
@@ -20,6 +19,13 @@ pub struct LinkWeight {
   latency_ms: u32,
   bandwidth_gbps: u32,
 }
+
+impl LinkWeight {
+  pub fn get_weight(&self) -> u32 {
+    return  self.latency_ms + (1000 / self.bandwidth_gbps);
+  }
+}
+
 
 pub fn build_leaf_spine_topology(num_leaf: u32, servers_per_leaf: u32, num_spine: u32) -> UnGraph<GraphNode, LinkWeight> {
   //add stuff here
