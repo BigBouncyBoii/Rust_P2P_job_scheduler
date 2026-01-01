@@ -18,6 +18,7 @@ pub struct GraphNode {
   kind: NodeType,   
 }
 
+#[derive(Debug, Clone)]
 pub struct LinkWeight {
   latency_ms: u32,
   bandwidth_gbps: u32,
@@ -27,9 +28,22 @@ impl LinkWeight {
   pub fn get_weight(&self) -> u32 {
     return  self.latency_ms + (1000 / self.bandwidth_gbps);
   }
+
+  pub fn latency_ms(&self) -> u32 {
+    return self.latency_ms
+  }
+
+  pub fn bandwidth_gbps(&self) -> u32 {
+    return self.bandwidth_gbps
+  }
 }
 
 impl GraphNode {
+
+  pub fn id(&self) -> &str {
+    return &self.id
+  }
+
   pub fn kind(&self) -> &NodeType{
     return &self.kind
   }
@@ -61,7 +75,7 @@ fn build_leaf_server(num_leaf: u32,
   rng: &mut impl Rng, 
   leaf_nodes: &mut Vec<NodeIndex>) {
 
-  for i in 0..num_leaf{
+  for _ in 0..num_leaf{
     let leaf = GraphNode{
       id: Uuid::new_v4().to_string(),
       node: None,
@@ -69,7 +83,7 @@ fn build_leaf_server(num_leaf: u32,
     };
     let leaf_node = g.add_node(leaf);
     leaf_nodes.push(leaf_node);
-    for j in 0..servers_per_leaf{
+    for _ in 0..servers_per_leaf{
       let server = GraphNode{
         id: Uuid::new_v4().to_string(),
         node: Some(Node::new(
@@ -81,8 +95,8 @@ fn build_leaf_server(num_leaf: u32,
       };
       let server_node = g.add_node(server);
       let link_weight = LinkWeight{
-        latency_ms: rng.gen_range(0..10),
-        bandwidth_gbps: rng.gen_range(0..10)
+        latency_ms: rng.gen_range(1..10),
+        bandwidth_gbps: rng.gen_range(1..10)
       };
       g.add_edge(leaf_node, server_node, link_weight);
     }
@@ -95,7 +109,7 @@ fn build_leaf_spine(num_spine: u32,
   leaf_nodes: &Vec<NodeIndex>,
   spine_nodes: &mut Vec<NodeIndex>){
 
-  for i in 0..num_spine{
+  for _ in 0..num_spine{
     let spine = GraphNode{
       id: Uuid::new_v4().to_string(),
       node: None,
@@ -108,8 +122,8 @@ fn build_leaf_spine(num_spine: u32,
   for leaf_node in leaf_nodes{
     for spine_node in &*spine_nodes{
       let link_weight = LinkWeight{
-        latency_ms: rng.gen_range(0..10),
-        bandwidth_gbps: rng.gen_range(0..10)
+        latency_ms: rng.gen_range(1..10),
+        bandwidth_gbps: rng.gen_range(1..10)
       };
       g.add_edge(*leaf_node, *spine_node, link_weight);
     }
